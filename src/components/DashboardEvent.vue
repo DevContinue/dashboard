@@ -6,8 +6,10 @@
           <em class="m-2">{{ data.icon }}</em>
           <strong>{{ data.name }}</strong>
           {{ data.link }}
-          <em class="fas fa-edit me-2" role="button" @click="editObj"></em>
-          <em class="far fa-trash-alt" role="button" @click="deleteObj"></em>
+          <div>
+            <em class="fas fa-edit me-2" role="button" @click="editObj"></em>
+            <em class="far fa-trash-alt" role="button" @click="deleteObj"></em>
+          </div>
         </div>
       </div>
       <div v-else class="flex items-center">
