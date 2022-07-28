@@ -3,14 +3,14 @@
     <div class="flex items-center justify-center min-h-screen bg-gray-100">
       <div class="px-8 py-6 mt-4 text-left bg-white shadow-lg">
         <h3 class="text-2xl font-bold text-center">Login to your account</h3>
-        <form action="">
+        <form @submit.prevent="onCreatePost">
           <div class="mt-4">
             <div>
               <label class="block" for="email">Email</label>
               <input
                 type="text"
                 placeholder="Email"
-                v-model="email"
+                v-model="auth.email"
                 class="w-full px-4 py-2 mt-2 border rounded-md focus:outline-none focus:ring-1 focus:ring-blue-600"
               />
             </div>
@@ -19,14 +19,14 @@
               <input
                 type="password"
                 placeholder="Password"
-                v-model="password"
+                v-model="auth.password"
                 class="w-full px-4 py-2 mt-2 border rounded-md focus:outline-none focus:ring-1 focus:ring-blue-600"
               />
             </div>
             <div class="flex items-baseline justify-between">
               <button
+                type="submit"
                 class="px-6 py-2 mt-4 text-white bg-blue-600 rounded-lg hover:bg-blue-900"
-                @click="checkCredentials($event)"
               >
                 Login
               </button>
@@ -39,8 +39,6 @@
       </div>
     </div>
   </div>
-  
- 
 </template>
 
 <script>
@@ -50,28 +48,18 @@ export default {
     return {
       email: "",
       password: "",
-      currentEmail: "s_kapahnke@web.de",
-      users: [
-        { email: "s_kapahnke@web.de", password: "1234" },
-      ],
+      apiUrl: "https://x8ki-letl-twmt.n7.xano.io/api:4yIyC8ks/auth/login",
+      auth: {
+        email: "",
+        password: "",
+      },
     };
   },
   methods: {
-    checkPassword(password) {
-        return this.users.filter(user => password === user.password)
-    },
-    checkCredentials(event) {
-      event.preventDefault();
-      if ( this.email === this.currentEmail &&
-        this.checkPassword(this.password).length !== 0
-      ) {
-        this.$router.push('/about')
-      } else {
-        console.warn("falsche Credentials");
-      }
-    },
-    changeUser(email) {
-      this.currentEmail = email;
+    async onCreatePost() {
+      let response = await this.axios.post(this.apiUrl, this.auth);
+      if (response) this.$router.push("/about");
+      console.log(response);
     },
   },
 };

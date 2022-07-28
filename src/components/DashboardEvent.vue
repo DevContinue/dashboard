@@ -17,21 +17,18 @@
           <input
           type="text"
           class="form-control w-1/3 mr-2"
-          ref="newEventTitleInput"
           :placeholder="data.icon"
         />
           <h5 class="mr-3">Name: </h5>
           <input
           type="text"
           class="form-control w-1/3 mr-2"
-          ref="newEventTitleInput"
           :placeholder="data.name"
         />
         <h5 class="mr-3">Link: </h5>
         <input
           type="text"
           class="form-control w-1/3"
-          ref="newEventTitleInput"
           :placeholder="data.link"
         />
         <i class="ml-4 fas fa-check" role="button" @click="updateObj"></i>
@@ -51,6 +48,7 @@ export default {
     return {
       data: this.dataProps,
       toggle: false,
+      link: this.dataProps.link
     };
   },
   methods: {

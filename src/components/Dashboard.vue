@@ -1,4 +1,4 @@
-<template>  
+<template>
   <div class="container-fluid mt-5">
     <router-link to="/">Logout</router-link>
     <div class="row">
@@ -27,31 +27,33 @@
               <h5>Neuer Eintrag</h5>
             </div>
             <div class="card-body">
-              <input
-                type="text"
-                class="form-control"
-                placeholder="Neues Icon"
-                v-model="newEventIcon"
-              />
-              <input
-                type="text"
-                class="form-control"
-                placeholder="Neuer Name"
-                v-model="newEventName"
-              />
-              <input
-                type="text"
-                class="form-control"
-                placeholder="Neuer Link"
-                v-model="newEventLink"
-              />
-              <div class="text-center mt-3"></div>
-              <hr />
-              <div class="d-grid gap-2">
-                <button class="btn btn-primary" @click="addObj">
-                  Eintragen
-                </button>
-              </div>
+              <form >
+                <input
+                  type="text"
+                  class="form-control"
+                  placeholder="Neues Icon"
+                  v-model="newEventIcon"
+                />
+                <input
+                  type="text"
+                  class="form-control"
+                  placeholder="Neuer Name"
+                  v-model="newEventName"
+                />
+                <input
+                  type="text"
+                  class="form-control"
+                  placeholder="Neuer Link"
+                  v-model="newEventLink"
+                />
+                <div class="text-center mt-3"></div>
+                <hr />
+                <div class="d-grid gap-2">
+                  <button class="btn btn-primary" @click="addObj">
+                    Eintragen
+                  </button>
+                </div>
+              </form>
             </div>
           </div>
         </div>
