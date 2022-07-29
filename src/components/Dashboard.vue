@@ -124,9 +124,7 @@ export default {
       this.$router.push("/");
     },
     submitData() {
-      Date.now = function () {
-        return new Date().getTime();
-      };
+      
 
       axios.post(
         this.objects,

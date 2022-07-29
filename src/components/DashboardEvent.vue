@@ -56,9 +56,9 @@ export default {
         return {
           id: -1,
           label_id: -1,
-          name: "Fehlender Name",          
-          link: "Fehlender Link",
-          icon: "Fehlendes Icon",
+          name: "",          
+          link: "",
+          icon: "",
           created_at: Math.floor(Date.now() / 1000),
         };
       },
@@ -77,9 +77,6 @@ export default {
     };
   },
   methods: {
-    externalLink() {
-      this.$router.push()
-    },
     deleteObj() {
       this.$emit("deleteObj-id", this.dataProps);
     },
