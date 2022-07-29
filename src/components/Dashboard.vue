@@ -68,7 +68,7 @@
           <div class="card-group">
             <div class="card">
               <div class="card-header text-center">
-                <strong class="cursor-default">Daten</strong>
+                <strong class="cursor-default">Dashboard</strong>
               </div>
               <div v-for="data in serverData" :key="data.id">
                 <DashboardEvent
@@ -97,20 +97,19 @@ export default {
       newEventIcon: "",
       newEventName: "",
       newEventLink: "",
-      objects: "https://x8ki-letl-twmt.n7.xano.io/api:4yIyC8ks/objects",
       serverData: [],
     };
   },
-
-  async created() {
-    const res = await axios.get(this.objects, {
-      headers: {
-        Authorization: "Bearer " + localStorage.getItem("token"),
+   async created() {
+        const response = await axios.get("objects", {
+          headers: {
+            Authorization: "Bearer " + localStorage.getItem("token"),
+          },
+        });
+         this.serverData = response.data;
+        
       },
-    });
-    this.serverData = res.data;
-    console.log(this.serverData);
-  },
+
   methods: {
     onEnter(e) {
       if (e.target.value === "") {
@@ -123,11 +122,10 @@ export default {
       localStorage.removeItem("token");
       this.$router.push("/");
     },
-    submitData() {
-      
+    submitData() {      
 
       axios.post(
-        this.objects,
+        "objects",
         {
           id: Math.random(),
           label_id: Math.random(),
@@ -144,7 +142,7 @@ export default {
       );
     },
     deleteObj(data) {
-      axios.delete(this.objects + `/${data.id}`, {
+      axios.delete(`objects/${data.id}`, {
         headers: {
           Authorization: "Bearer " + localStorage.getItem("token"),
         },
