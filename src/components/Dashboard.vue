@@ -1,59 +1,81 @@
 <template>
-  <div class="container-fluid mt-5">
-    <router-link to="/">Logout</router-link>
-    <div class="row">
-      <div class="col-12">
-        <div class="card-group">
-          <div class="card">
-            <div class="card-header text-center">
-              <strong>Daten</strong>
-            </div>
-            <div v-for="(data, index) in serverData" :key="data.id">
-              <DashboardEvent
-                :dataProps="data"
-                :indexProps="index"
-                @deleteObj-index="deleteObj"
-              />
+  <div class="container-fluid mt-5 px-10">
+    <div class="flex gap-3 mb-20">
+      <button class="text-white btn btn-primary" @click="logout">Logout</button>
+      <input
+        v-show="display"
+        class="w-2/4 text-secondary p-2 rounded"
+        type="text"
+        @keyup.enter="onEnter"
+        placeholder="Search..."
+      />
+    </div>
+
+    <div class="flex">
+      <div class="row w-1/4">
+        <div class="">
+          <div id="data-entry">
+            <div class="card">
+              <div class="card-header text-center">
+                <h5 class="cursor-default">Neuer Eintrag</h5>
+              </div>
+              <div class="card-body">
+                <form @submit.prevent="submitData">
+                  <label for="Icon">Icon</label>
+                  <select class="form-select mt-2" v-model="newEventIcon">
+                    <option value="server">Server</option>
+                    <option value="app">App</option>
+                  </select>
+                  <!-- <input
+                    type="text"
+                    class="form-control mb-2"
+                    placeholder="Neues Icon"
+                    v-model="newEventIcon"
+                  /> -->
+                  <label for="Name" >Name</label>
+                  <input
+                    type="text"
+                    class="form-control mb-2"
+                    placeholder="Neuer Name"
+                    v-model="newEventName"
+                  />
+                  <label for="Link">Link</label>
+                  <input
+                    type="text"
+                    class="form-control"
+                    placeholder="Neuer Link"
+                    v-model="newEventLink"
+                  />
+                  <div class="text-center mt-3"></div>
+                  <hr />
+                  <div class="d-grid gap-2">
+                    <button
+                      class="text-white btn btn-primary mt-2 pointer-events: none"
+                      type="submit"
+                    >
+                      Eintragen
+                    </button>
+                  </div>
+                </form>
+              </div>
             </div>
           </div>
         </div>
       </div>
-    </div>
-    <div class="row mt-3">
-      <div class="col-4 offset-4">
-        <div id="data-entry">
-          <div class="card">
-            <div class="card-header text-center">
-              <h5>Neuer Eintrag</h5>
-            </div>
-            <div class="card-body">
-              <form >
-                <input
-                  type="text"
-                  class="form-control"
-                  placeholder="Neues Icon"
-                  v-model="newEventIcon"
+
+      <div class="row w-3/4 ml-1">
+        <div>
+          <div class="card-group">
+            <div class="card">
+              <div class="card-header text-center">
+                <strong class="cursor-default">Daten</strong>
+              </div>
+              <div v-for="data in serverData" :key="data.id">
+                <DashboardEvent
+                  :dataProps="data"
+                  @deleteObj-id="deleteObj"
                 />
-                <input
-                  type="text"
-                  class="form-control"
-                  placeholder="Neuer Name"
-                  v-model="newEventName"
-                />
-                <input
-                  type="text"
-                  class="form-control"
-                  placeholder="Neuer Link"
-                  v-model="newEventLink"
-                />
-                <div class="text-center mt-3"></div>
-                <hr />
-                <div class="d-grid gap-2">
-                  <button class="btn btn-primary" @click="addObj">
-                    Eintragen
-                  </button>
-                </div>
-              </form>
+              </div>
             </div>
           </div>
         </div>
@@ -64,51 +86,83 @@
 
 <script>
 import DashboardEvent from "@/components/DashboardEvent.vue";
+import axios from "axios";
 
 export default {
   name: "DashboardObj",
   components: { DashboardEvent },
   data() {
     return {
+      display: true,
       newEventIcon: "",
       newEventName: "",
       newEventLink: "",
-      serverData: [
-        {
-          id: 1,
-          label_id: 1,
-          name: "Awesome Server",
-          link: "https://example.com",
-          icon: "server",
-          created_at: 1658763176202,
-        },
-      ],
+      objects: "https://x8ki-letl-twmt.n7.xano.io/api:4yIyC8ks/objects",
+      serverData: [],
     };
   },
+
+  async created() {
+    const res = await axios.get(this.objects, {
+      headers: {
+        Authorization: "Bearer " + localStorage.getItem("token"),
+      },
+    });
+    this.serverData = res.data;
+    console.log(this.serverData);
+  },
   methods: {
-    addObj() {
-      if (this.newEventName.trim() === "") {
-        this.newEventName = "";
-        this.newEventIcon = "";
-        this.newEventLink = "";
+    onEnter(e) {
+      if (e.target.value === "") {
         return;
       } else {
-        this.serverData.push({
+        alert(e.target.value);
+      }
+    },
+    logout() {
+      localStorage.removeItem("token");
+      this.$router.push("/");
+    },
+    submitData() {
+      Date.now = function () {
+        return new Date().getTime();
+      };
+
+      axios.post(
+        this.objects,
+        {
           id: Math.random(),
           label_id: Math.random(),
           name: this.newEventName,
           link: this.newEventLink,
           icon: this.newEventIcon,
-          created_at: 1658763176587,
-        });
-        this.newEventName = "";
-        this.newEventIcon = "";
-        this.newEventLink = "";
-      }
+          created_at: Math.floor(Date.now() / 1000),
+        },
+        {
+          headers: {
+            Authorization: "Bearer " + localStorage.getItem("token"),
+          },
+        }
+      );
     },
-    deleteObj(index) {
-      this.serverData.splice(index, 1);
+    deleteObj(data) {
+      axios.delete(this.objects + `/${data.id}`, {
+        headers: {
+          Authorization: "Bearer " + localStorage.getItem("token"),
+        },
+      });
     },
   },
 };
 </script>
+
+<style scoped>
+.btn-primary {
+  background-color: #0275d8;
+  font-family: "Franklin Gothic Medium", "Arial Narrow", Arial, sans-serif;
+}
+.btn-primary:hover {
+  background-color: #0275d8;
+  border: 4px solid #0167c0;
+}
+</style>

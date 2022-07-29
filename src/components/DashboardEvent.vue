@@ -1,11 +1,11 @@
 <template>
   <div class="card-body">
-    <div class="alert text-center">
+    <div class="alert text-center border border-primary">
       <div v-if="!toggle">
         <div class="flex justify-between items-center">
-          <em class="m-2">{{ data.icon }}</em>
-          <strong>{{ data.name }}</strong>
-          {{ data.link }}
+          <p class="m-2 cursor-default">{{ data.icon }}</p>
+          <strong class="cursor-default">{{ data.name }}</strong>
+          <a target="_blank" :href="data.link">{{ data.link }} </a>
           <div>
             <em class="fas fa-edit me-2" role="button" @click="editObj"></em>
             <em class="far fa-trash-alt" role="button" @click="deleteObj"></em>
@@ -13,19 +13,23 @@
         </div>
       </div>
       <div v-else class="flex items-center">
-        <h5 class="mr-3">Name: </h5>
-          <input
+        <h5 class="mr-3 cursor-default">Icon: </h5>
+          <select class="form-select mr-2 w-1/3">
+            <option value="server">Server</option>
+            <option value="app">App</option>
+          </select>
+         <!--  <input
           type="text"
           class="form-control w-1/3 mr-2"
           :placeholder="data.icon"
-        />
-          <h5 class="mr-3">Name: </h5>
+        /> -->
+          <h5 class="mr-3 cursor-default">Name: </h5>
           <input
           type="text"
           class="form-control w-1/3 mr-2"
           :placeholder="data.name"
         />
-        <h5 class="mr-3">Link: </h5>
+        <h5 class="mr-3 cursor-default">Link: </h5>
         <input
           type="text"
           class="form-control w-1/3"
@@ -43,17 +47,41 @@
 
 export default {
   name: "DashboardEvent",
-  props: ["dataProps", "indexProps"],
+  /* ["dataProps", "indexProps"], */
+  props: {
+    dataProps: {
+      type: Object,
+      required: true,
+      default: function () {
+        return {
+          id: -1,
+          label_id: -1,
+          name: "Fehlender Name",          
+          link: "Fehlender Link",
+          icon: "Fehlendes Icon",
+          created_at: Math.floor(Date.now() / 1000),
+        };
+      },
+      validator: function (value) {
+        if (Object.keys(value).includes("id")) {
+          return true;
+        }
+      },
+    },
+  }, 
   data() {
     return {
       data: this.dataProps,
       toggle: false,
-      link: this.dataProps.link
+      to: this.dataProps.link
     };
   },
   methods: {
+    externalLink() {
+      this.$router.push()
+    },
     deleteObj() {
-      this.$emit("deleteObj-index", this.indexProps);
+      this.$emit("deleteObj-id", this.dataProps);
     },
     editObj() {
       this.toggle = !this.toggle;

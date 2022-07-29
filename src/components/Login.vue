@@ -1,6 +1,6 @@
 <template>
   <div class="Login">
-    <div class="flex items-center justify-center min-h-screen bg-gray-100">
+    <div class="flex items-center justify-center min-h-screen bg-gray-600">
       <div class="px-8 py-6 mt-4 text-left bg-white shadow-lg">
         <h3 class="text-2xl font-bold text-center">Login to your account</h3>
         <form @submit.prevent="onCreatePost">
@@ -42,6 +42,7 @@
 </template>
 
 <script>
+import axios from "axios";
 export default {
   name: "login-page",
   data() {
@@ -49,17 +50,19 @@ export default {
       email: "",
       password: "",
       apiUrl: "https://x8ki-letl-twmt.n7.xano.io/api:4yIyC8ks/auth/login",
+      objects: "https://x8ki-letl-twmt.n7.xano.io/api:4yIyC8ks/objects",
       auth: {
-        email: "",
-        password: "",
+        email: "sascha@example.com",
+        password: "test12345",
       },
     };
   },
   methods: {
     async onCreatePost() {
-      let response = await this.axios.post(this.apiUrl, this.auth);
-      if (response) this.$router.push("/about");
-      console.log(response);
+      const response = await axios.post(this.apiUrl, this.auth);
+      /*    */
+      localStorage.setItem("token", response.data.authToken);
+      this.$router.push("/dashboard");
     },
   },
 };
