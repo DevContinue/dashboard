@@ -49,8 +49,6 @@ export default {
     return {
       email: "",
       password: "",
-      apiUrl: "https://x8ki-letl-twmt.n7.xano.io/api:4yIyC8ks/auth/login",
-      objects: "https://x8ki-letl-twmt.n7.xano.io/api:4yIyC8ks/objects",
       auth: {
         email: "sascha@example.com",
         password: "test12345",
@@ -59,7 +57,7 @@ export default {
   },
   methods: {
     async onCreatePost() {
-      const response = await axios.post(this.apiUrl, this.auth);
+      const response = await axios.post("auth/login", this.auth);
       /*    */
       localStorage.setItem("token", response.data.authToken);
       this.$router.push("/dashboard");
